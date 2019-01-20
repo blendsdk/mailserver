@@ -19,7 +19,7 @@ command apt-get install mysql-server -y 2>/dev/null || {
 }
 
 echo "Starting MySQL"
-command service mysqld restart 2> /dev/null || {
+command service mysql restart 2> /dev/null || {
   echo >&2 'Failed to start MySQL!'
   exit 2
 }
