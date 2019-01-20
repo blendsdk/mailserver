@@ -12,15 +12,16 @@ fi
 # force set home to root
 export HOME=/root
 
-command apt-get install mysql-server -y || {
+echo "Installing MySQL"
+command apt-get install mysql-server -y 2>/dev/null || {
   echo >&2 'Failed to install MySQL!'
   exit 2
 }
 
-command service mysqld restart || {
+echo "Starting MySQL"
+command service mysqld restart 2> /dev/null || {
   echo >&2 'Failed to start MySQL!'
   exit 2
-
 }
 
 # securing mysql
