@@ -12,12 +12,6 @@ fi
 # force set home to root
 export HOME=/root
 
-echo "Installing Expect"
-command apt-get -qq install expect > /dev/null || {
-   echo >&2 'Failed to install Expect!'
-  exit 2
-}
-
 echo "Installing MySQL"
 command apt-get -qq install mysql-server -y 2>/dev/null || {
   echo >&2 'Failed to install MySQL!'
