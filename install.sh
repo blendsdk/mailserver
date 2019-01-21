@@ -26,5 +26,19 @@ if ! [ -x "$(which composer)" ]; then
     echo -e ",\e[96mdone."
 fi
 
+if ! [ -x "$(which git)" ]; then
+    echo -ne "\e[93mInstalling GIT:..." && \
+    apt-get install git -y >> /dev/null 2>&1
+    echo -e ",\e[96mdone."
+fi
+
+if [ -d "./mailserver" ]; then
+    rm -fR ./mailserver
+fi
+
+echo -ne "\e[93mGetting setup files..."
+git clone --depth=1 https://github.com/blendsdk/mailserver.git 2>&1
+echo -e ",\e[96mdone."
+
 
 } # this ensures the entire script is downloaded #
