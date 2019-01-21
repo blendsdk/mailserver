@@ -40,6 +40,10 @@ fi
 # force set home to root
 export HOME=/root
 
+# update and upgrade this system
+apt-get update -y
+apt-get upgrade -y
+
 # install spamassassin
 apt-get install -qq -y spamassassin
 cp ./spamassassin /etc/default/spamassassin
@@ -51,11 +55,10 @@ apt-get install -y postfix
 apt-get install -y postfix-pgsql
 
 # lets encrypt
-apt-get update
-apt-get install software-properties-common
-add-apt-repository universe
-add-apt-repository ppa:certbot/certbot
-apt-get update
-apt-get install certbot
+apt-get install software-properties-common -y
+add-apt-repository universe -y
+add-apt-repository ppa:certbot/certbot -y
+apt-get update -y
+apt-get install certbot -y
 
 } # this ensures the entire script is downloaded #
