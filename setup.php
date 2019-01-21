@@ -1,27 +1,39 @@
 <?php
 
 require_once dirname(__FILE__) . '/vendor/autoload.php';
-
 use Colors\Color;
-$color = new Color();
 
-function prompt_info($message) {
-    echo $color($message)->yellow;
+class MailSetup {
+
+    protected $color;
+
+    public function __construct() {
+        $this->color = new Color();
+    }
+
+    protected function prompt_info($message) {
+        echo $this->color($message)->yellow;
+    }
+
+    protected function prompt_done() {
+        echo $this->color('done.')->cyan . PHP_EOL;
+    }
+
+    protected function install_system_package(array $packages) {
+        shell_exec("apt-get install -y " . implode(" ", $packages) . " /dev/null 2>&1");
+    }
+
+    protected function install_postgresql() {
+        $this->prompt_info("Installing PostgreSQL...");
+        $this->install_system_package(["postgresql"]);
+        $this->prompt_done();
+    }
+
+    public function run() {
+        $this->install_postgresql();
+    }
 }
 
-function prompt_done() {
-    echo $color('done.')->cyan . PHP_EOL;
-}
-
-function install_system_package(array $packages) {
-    shell_exec("apt-get install -y " . implode(" ", $packages) . " /dev/null 2>&1");
-}
-
-function install_postgresql() {
-    prompt_info("Installing PostgreSQL...");
-    install_system_package(["postgresql"]);
-    prompt_done();
-}
-
-install_postgresql();
+$setup = new MailSetup();
+$setup->run();
 
