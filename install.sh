@@ -3,7 +3,7 @@
 { # this ensures the entire script is downloaded #
 
 if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run as root"
+   echo -e >&2 "\e[91mThis script must be run as root!"
    exit 1
 fi
 
