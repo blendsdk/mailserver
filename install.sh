@@ -14,6 +14,9 @@ usage()
     echo "usage: install -d mail.mydomain.ltd"
 }
 
+pause() {
+   read -rsp $'Press any key to continue...\n' -n1 key
+}
 
 # mailserver
 mailserver=
