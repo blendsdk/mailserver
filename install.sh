@@ -63,16 +63,18 @@ command ./mailuser.sh || {
 
 # setting the firewall
 command ./firewall.sh || {
-  echo >&2 'Firewall configuration failed!'
+  echo >&2 ''
+  echo -e >&2 "\e[91mFirewall configuration failed!"
   exit 2
 }
 
 # installing postgresql
 command ./postgresql.sh || {
-  echo >&2 'PostgreSQL configuration failed!'
+  echo -e >&2 "\e[91mPostgreSQL configuration failed!"
   exit 2
 }
 
+echo -e "Password:\e[93m${DB_PASSWORD}"
 exit;
 
 # # update and upgrade this system and add needed repos
