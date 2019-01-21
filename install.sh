@@ -19,10 +19,10 @@ if ! [ -x "$(which php)" ]; then
 fi
 
 if ! [ -x "$(which composer)" ]; then
-    echo -ne "\e[93mInstalling Composer:..."
-    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" >> /dev/null 2>&1
-    php composer-setup.php --install-dir=/usr/local/bin --filename=composer
-    php -r "unlink('composer-setup.php');"
+    echo -ne "\e[93mInstalling Composer:..." && \
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" >> /dev/null && \
+    php composer-setup.php --install-dir=/usr/local/bin --filename=composer >> /dev/null && \
+    php -r "unlink('composer-setup.php');" && \
     echo -e ",\e[96mdone."
 fi
 
