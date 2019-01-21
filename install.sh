@@ -20,7 +20,7 @@ domain_name=
 while [ "$1" != "" ]; do
     case $1 in
         -d | --domain ) shift
-                        filenadomain_nameme=$1
+                        domain_name=$1
                         ;;
         -h | --help )           usage
                                 exit
