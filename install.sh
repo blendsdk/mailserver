@@ -9,13 +9,43 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
+usage()
+{
+    echo "usage: install -d mail.mydomain.ltd"
+}
+
+
+domain_name=
+
+while [ "$1" != "" ]; do
+    case $1 in
+        -d | --domain ) shift
+                        filenadomain_nameme=$1
+                        ;;
+        -h | --help )           usage
+                                exit
+                                ;;
+        * )                     usage
+                                exit 1
+    esac
+    shift
+done
+
+if [ -z ${domain_name} ]; then
+    echo "No domain name provided!"
+    exit 2;
+fi
+
 # force set home to root
 export HOME=/root
 
-echo "Installing PostgreSQL"
-command apt-get -qq install postgresql -y 2>/dev/null || {
-  echo >&2 'Failed to install PostgreSQL!'
-  exit 2
-}
+# install spamassassin
+apt-get install -qq -y spamassassin
+cp ./spamassassin /etc/default/spamassassin
+
+# install postfix
+debconf-set-selections <<< "postfix postfix/mailname string your.hostname.com"
+debconf-set-selections <<< "postfix postfix/main_mailer_type string 'Internet Site'"
+apt-get install -y postfix
 
 } # this ensures the entire script is downloaded #

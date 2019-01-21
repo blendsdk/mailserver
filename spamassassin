@@ -1,0 +1,4 @@
+ENABLED=1
+OPTIONS="--create-prefs --max-children 5 --helper-home-dir --username debian-spamd --syslog /var/log/spamd.log"
+PIDFILE="/var/run/spamd.pid"
+CRON=1
