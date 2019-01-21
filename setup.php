@@ -17,7 +17,7 @@ class MailSetup {
     }
 
     protected function install_system_package(array $packages) {
-        shell_exec("apt-get install -y " . implode(" ", $packages) . " /dev/null 2>&1");
+        shell_exec("apt-get install -y " . implode(" ", $packages) . " >> /dev/null 2>&1");
     }
 
     protected function install_postgresql() {
