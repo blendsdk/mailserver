@@ -45,59 +45,73 @@ fi
 # force set home to root
 export HOME=/root
 
-# opening ports
-ufw allow ssh
-ufw allow http
-ufw allow https
-ufw allow 587 # smtp
-ufw allow 456 # secure smtp
-ufw allow 143 # imap
-ufw allow 998 # imap tls
-
-
-# update and upgrade this system and add needed repos
-# lets encrypt
+# updateing an upgrading the system
 apt-get update -y
-apt-get install software-properties-common -y
-add-apt-repository universe -y
-add-apt-repository ppa:certbot/certbot -y
-apt-get update -y
-apt-get upgrade -   y
+apt-get upgrade -y
 
-# install spamassassin
-apt-get install -qq -y spamassassin
-cp ./spamassassin /etc/default/spamassassin
+# setting the firewall
+command ./firewall.sh || {
+  echo >&2 'Firewall configuration failed!'
+  exit 2
+}
 
-# install postfix
-debconf-set-selections <<< "postfix postfix/mailname string ${mailserver}"
-debconf-set-selections <<< "postfix postfix/main_mailer_type string 'Internet Site'"
-apt-get install -y postfix
-apt-get install -y postfix-pgsql
+# installing postgresql
+command ./postgresql.sh || {
+  echo >&2 'PostgreSQL configuration failed!'
+  exit 2
+}
 
-# lets encrypt
-apt-get install software-properties-common -y
-add-apt-repository universe -y
-add-apt-repository ppa:certbot/certbot -y
-apt-get update -y
-apt-get install certbot -y
+exit;
 
-# configure postfix
+# # update and upgrade this system and add needed repos
+# # lets encrypt
+# apt-get update -y
+# apt-get install software-properties-common -y
+# add-apt-repository universe -y
+# add-apt-repository ppa:certbot/certbot -y
+# apt-get update -y
+# apt-get upgrade -y
 
-# create virtual mail user account and group
-sudo useradd -r -u 2000 -g vmail -d ${vmailhome} -s /sbin/nologin -c "Virtual Mail User" vmail
-sudo mkdir -p ${vmailhome}
-sudo chmod -R 770 ${vmailhome}
-sudo chown -R vmail:vmail ${vmailhome}
+# # install postgresql
+# apt-get install postgresql -y
 
-#set the mailname, for postfix myorigin
-echo ${mailserver} > /etc/mailname
-# setting the hostname
-postconf -e "myhostname = ${mailserver}"
-# no more old clients
-postconf -e "broken_sasl_auth_clients = no"
-# do not allow VERIFY command on smtp
-postconf -e "disable_vrfy_command = yes"
+# # install spamassassin
+# apt-get install -qq -y spamassassin
+# cp ./spamassassin /etc/default/spamassassin
 
-echo "Run: sudo ufw enable"
+# # install postfix
+# debconf-set-selections <<< "postfix postfix/mailname string ${mailserver}"
+# debconf-set-selections <<< "postfix postfix/main_mailer_type string 'Internet Site'"
+# apt-get install -y postfix
+# apt-get install -y postfix-pgsql
+
+# # lets encrypt
+# apt-get install software-properties-common -y
+# add-apt-repository universe -y
+# add-apt-repository ppa:certbot/certbot -y
+# apt-get update -y
+# apt-get install certbot -y
+
+# # configure postfix
+
+# # create virtual mail user account and group
+# groupadd vmail
+# useradd -r -u 2000 -g vmail -d ${vmailhome} -s /usr/sbin/nologin -c "Virtual Mail User" vmail
+# mkdir -p ${vmailhome}
+# chmod -R 770 ${vmailhome}
+# chown -R vmail:vmail ${vmailhome}
+
+# #set the mailname, for postfix myorigin
+# echo ${mailserver} > /etc/mailname
+# # setting the hostname
+# postconf -e "myhostname = ${mailserver}"
+# # no more old clients
+# postconf -e "broken_sasl_auth_clients = no"
+# # do not allow VERIFY command on smtp
+# postconf -e "disable_vrfy_command = yes"
+# # change the default banner
+# postconf -e "smtpd_banner = \$myhostname ESMTP"
+
+# echo "Run: ufw enable"
 
 } # this ensures the entire script is downloaded #
