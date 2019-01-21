@@ -1,14 +1,13 @@
 <?php
 
 require_once dirname(__FILE__) . '/vendor/autoload.php';
-use Colors\Color;
 
 class MailSetup {
 
     protected $color;
 
     public function __construct() {
-        $this->color = new Color();
+        $this->color = new Colors\Color();
     }
 
     protected function prompt_info($message) {
