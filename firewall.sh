@@ -12,4 +12,4 @@ ufw allow 587 # smtp
 ufw allow 456 # secure smtp
 ufw allow 143 # imap
 ufw allow 998 # imap tls
-ufw force --enable
+ufw --force enable
