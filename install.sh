@@ -37,8 +37,6 @@ fi
 
 export MAILSERVER_FDQN
 
-echo -e "\e[93mConfiguring ${MAILSERVER_FDQN}"
-
 echo -ne "\e[93mPreparing..."
 apt-get update -y >> /dev/null 2>&1
 apt-get upgrade -y >> /dev/null 2>&1
