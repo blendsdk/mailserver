@@ -37,7 +37,7 @@ if [ -d "./mailserver" ]; then
 fi
 
 echo -ne "\e[93mGetting setup files..."
-git clone --depth=1 https://github.com/blendsdk/mailserver.git 2>&1
+git clone --depth=1 https://github.com/blendsdk/mailserver.git >> /dev/null 2>&1
 echo -e ",\e[96mdone."
 
 
