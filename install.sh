@@ -38,6 +38,9 @@ fi
 
 echo -ne "\e[93mGetting setup files..."
 git clone --depth=1 https://github.com/blendsdk/mailserver.git >> /dev/null 2>&1
+cd mailserver
+composer update >> /dev/null 2>&1
+cd ..
 echo -e ",\e[96mdone."
 
 
