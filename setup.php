@@ -6,7 +6,7 @@ class MailSetup {
 
     protected $color;
 
-    public function __construct() {
+    function __construct() {
         $this->color = new Colors\Color();
     }
 
