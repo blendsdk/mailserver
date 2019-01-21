@@ -45,7 +45,7 @@ class MailSetup {
 
         if(file_exists($last_err_file)) {
             $this->last_error = file_get_contents($last_err_file);
-            unlink($last_err_file);
+            // unlink($last_err_file);
             return false;
         } else {
             return true;
