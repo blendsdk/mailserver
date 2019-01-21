@@ -7,6 +7,38 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
+usage()
+{
+    echo "usage: install -d mail.mydomain.ltd"
+}
+
+# mailserver
+MAILSERVER_FDQN=
+
+while [ "$1" != "" ]; do
+    case $1 in
+        -d | --domain ) shift
+                        MAILSERVER_FDQN=$1
+                        ;;
+        -h | --help )           usage
+                                exit
+                                ;;
+        * )                     usage
+                                exit 1
+    esac
+    shift
+done
+
+if [ -z ${MAILSERVER_FDQN} ]; then
+    echo -e >&2 "\e[91mNo domain name provided!"
+    usage
+    exit 2;
+fi
+
+export MAILSERVER_FDQN
+
+echo -e "\e[93mConfiguring ${MAILSERVER_FDQN}"
+
 echo -ne "\e[93mPreparing..."
 apt-get update -y >> /dev/null 2>&1
 apt-get upgrade -y >> /dev/null 2>&1
@@ -42,7 +74,7 @@ cd mailserver
 composer update >> /dev/null 2>&1
 echo -e ",\e[96mdone."
 
-php setup.php
+php setup.php ${MAILSERVER_FDQN}
 
 cd ..
 
