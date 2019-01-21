@@ -2,8 +2,6 @@
 
 { # this ensures the entire script is downloaded #
 
-MYSQL_PASSWORD=`date +%s | sha256sum | base64 | head -c 10`
-
 if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root"
    exit 1
@@ -44,6 +42,7 @@ fi
 
 # force set home to root
 export HOME=/root
+export DB_PASSWORD=`date +%s | sha256sum | base64 | head -c 10`
 
 # updateing an upgrading the system
 apt-get update -y
