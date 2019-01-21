@@ -51,9 +51,10 @@ export MAIL_HOME=/home/${MAIL_USER}
 export MAILSERVER_FDQN
 
 # updateing an upgrading the system
-echo -e "\e[93mUpdating the system."
+echo -ne "\e[93mUpdating the system..."
 apt-get update -y >> /dev/null 2>&1
 apt-get upgrade -y >> /dev/null 2>&1
+echo -e ",\e[93mDone."
 
 command ./mailuser.sh || {
   echo -e >&2 "\e[91mMail server user configuration failed!"
