@@ -59,7 +59,7 @@ class MailSetup {
         $this->prompt_info("Installing PostgreSQL...");
         $this->install_system_package(["postgresql"]);
         if($this->execute_command("sudo -u postgres psql -c \"create role " . $this->mail_user . " with login password '" . $this->password .  "';\"")) {
-            if($this->execute_command("sudo -u postgres psql -c \"create database " . $this->server_fdqn . " owner " . $this->mail_user . "\";")) {
+            if($this->execute_command("sudo -u postgres psql -c \"create database " . $this->server_fdqn . " owner " . $this->mail_user . ";\"")) {
                 $this->prompt_done();
                 return true;
             }
