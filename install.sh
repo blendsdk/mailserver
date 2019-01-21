@@ -45,8 +45,17 @@ apt-get install -qq -y spamassassin
 cp ./spamassassin /etc/default/spamassassin
 
 # install postfix
-debconf-set-selections <<< "postfix postfix/mailname string your.hostname.com"
+debconf-set-selections <<< "postfix postfix/mailname string ${domain_name}"
 debconf-set-selections <<< "postfix postfix/main_mailer_type string 'Internet Site'"
 apt-get install -y postfix
+apt-get install -y postfix-pgsql
+
+# lets encrypt
+apt-get update
+apt-get install software-properties-common
+add-apt-repository universe
+add-apt-repository ppa:certbot/certbot
+apt-get update
+apt-get install certbot
 
 } # this ensures the entire script is downloaded #
