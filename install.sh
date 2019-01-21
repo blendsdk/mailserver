@@ -44,7 +44,7 @@ echo -e "\e[93mConfiguring ${MAILSERVER_FDQN}"
 # global variables
 export HOME=/root
 export DB_PASSWORD=`date +%s | sha256sum | base64 | head -c 10`
-export MAIL_GROUP=5000
+export MAIL_UID=5000
 export MAIL_USER=mailserver
 export MAIL_GROUP=mailserver
 export MAIL_HOME=/home/${MAIL_USER}
