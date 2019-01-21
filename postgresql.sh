@@ -6,5 +6,6 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 apt-get install postgresql -y
-psql -c "create role mail with login password '${DB_PASSWORD}';"
-psql -c "create database mailserver owner mail;"
+sudo -u postgres psql -c "create role mail with login password '${DB_PASSWORD}';"
+sudo -u postgres psql -c "create database mailserver owner mail;"
+sudo -u postgres psql -h 127.0.0.1
