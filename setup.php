@@ -19,7 +19,7 @@ class MailSetup {
 
     protected function prompt_info($message) {
         $c = new Color();
-        echo $c($message)->yellow;
+        echo $c($message)->light_yellow;
     }
 
     protected function prompt_done() {

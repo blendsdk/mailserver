@@ -37,25 +37,25 @@ fi
 
 export MAILSERVER_FDQN
 
-echo -ne "\e[93mPreparing"
+echo -ne "\e[93mPlease wait while preparing"
 apt-get update -y >> /dev/null 2>&1
 apt-get upgrade -y >> /dev/null 2>&1
 
 if ! [ -x "$(which php)" ]; then
     apt-get install php-cli -y >> /dev/null 2>&1
-    echo -e "."
+    echo -ne "."
 fi
 
 if ! [ -x "$(which composer)" ]; then
     php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" >> /dev/null && \
     php composer-setup.php --install-dir=/usr/local/bin --filename=composer >> /dev/null && \
     php -r "unlink('composer-setup.php');" && \
-    echo -e "."
+    echo -ne "."
 fi
 
 if ! [ -x "$(which git)" ]; then
     apt-get install git -y >> /dev/null 2>&1
-    echo -e "."
+    echo -ne "."
 fi
 
 if [ -d "./mailserver" ]; then
@@ -65,7 +65,7 @@ fi
 git clone --depth=1 https://github.com/blendsdk/mailserver.git >> /dev/null 2>&1
 cd mailserver
 composer update >> /dev/null 2>&1
-echo -e ",\e[96mdone."
+echo -e "\e[96mdone."
 
 php setup.php ${MAILSERVER_FDQN}
 
