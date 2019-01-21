@@ -33,6 +33,7 @@ done
 
 if [ -z ${domain_name} ]; then
     echo "No domain name provided!"
+    usage
     exit 2;
 fi
 
