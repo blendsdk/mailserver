@@ -69,6 +69,8 @@ class MailSetup {
     }
 
     public function run() {
+        $c = new Color();
+        echo $c("Installing " . $this->server_fdqn)->white()->bold()->highlight('green') . PHP_EOL;
         $this->install_postgresql();
     }
 }
