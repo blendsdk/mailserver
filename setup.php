@@ -2,20 +2,18 @@
 
 require_once dirname(__FILE__) . '/vendor/autoload.php';
 
+use Colors\Color;
+
 class MailSetup {
 
-    protected $color;
-
-    function __construct() {
-        $this->color = new Colors\Color();
-    }
-
     protected function prompt_info($message) {
-        echo $this->color($message)->yellow;
+        $c = new Color();
+        echo $c($message)->yellow;
     }
 
     protected function prompt_done() {
-        echo $this->color('done.')->cyan . PHP_EOL;
+        $c = new Color();
+        echo $c('done.')->cyan . PHP_EOL;
     }
 
     protected function install_system_package(array $packages) {
