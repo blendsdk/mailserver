@@ -9,10 +9,12 @@ class MailSetup {
     protected $last_error;
     protected $mail_user;
     protected $password;
+    protected $server_fdqn;
 
-    function __construct() {
+    function __construct($server_fdqn) {
         $this->mail_user = "mailserver";
         $this->password = base_convert(uniqid('pass', true), 10, 36);
+        $this->server_fdqn = $server_fdqn;
     }
 
     protected function prompt_info($message) {
@@ -71,6 +73,6 @@ class MailSetup {
     }
 }
 
-$setup = new MailSetup();
+$setup = new MailSetup(getenv('MAILSERVER_FDQN'));
 $setup->run();
 
