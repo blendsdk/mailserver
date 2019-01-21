@@ -46,9 +46,9 @@ class MailSetup {
         shell_exec($command . " >> /dev/null 2>" . $last_err_file);
 
         if(file_exists($last_err_file)) {
-            $this->last_error = file_get_contents($last_err_file);
-            // unlink($last_err_file);
-            return false;
+            $this->last_error = trim(file_get_contents($last_err_file));
+            unlink($last_err_file);
+            return empty($this->last_error);
         } else {
             return true;
         }
