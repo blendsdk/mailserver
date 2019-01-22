@@ -53,6 +53,16 @@ class MailServerInstaller {
         }
     }
 
+    protected function set_postfix_install_defaults() {
+        $script = [
+            "debconf-set-selections <<< \"postfix postfix/mailname string {$this->SERVER_FDQN}\"",
+            "debconf-set-selections <<< \"postfix postfix/main_mailer_type string 'Internet Site'\""
+        ];
+        $filename = tempnam("/tmp");
+        file_put_contents($filename, implode("\n", $script));
+        return $this->execute_command("bash {$filename}");
+    }
+
     /**
      * Install and configure postfix
      * @return boolean
