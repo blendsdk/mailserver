@@ -9,6 +9,9 @@ class MailServerInstaller {
      */
     protected $VERSION = "0.9";
     protected $SERVER_FDQN;
+    protected $USERNAME;
+    protected $PASSWORD;
+
     protected $last_error;
 
     /**
@@ -39,10 +42,15 @@ class MailServerInstaller {
      * Install PostgreSQL
      */
     protected function install_postgresql() {
-        $this->prompt_info("Installing PostgreSQL");
+        $this->prompt_info("Installing PostgreSQL", false);
         $this->install_system_package(['postgresql']);
-        $this->prompt_done();
-        return true;
+        if($this->execute_command("sudo -u postgres psql -c \"create role " . $this->USERNAME . " with login password '" . $this->PASSWORD .  "';\"")) {
+            if($this->execute_command("sudo -u postgres psql -c \"create database " . $this->USERNAME . " owner " . $this->USERNAME . ";\"")) {
+                $this->prompt_done();
+                return true;
+            }
+        }
+        $this->prompt_last_error();
     }
 
     /**
