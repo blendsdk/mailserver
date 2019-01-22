@@ -74,8 +74,8 @@ class MailServerInstaller {
     protected function install_postfix() {
         $this->prompt_info("Installing Postfix", false);
         if ($this->set_postfix_install_defaults()) {
-            $this->install_system_package(["postfix"]);
-            $this->install_system_package(["postfix-pgsql"]);
+            // $this->install_system_package(["postfix"]);
+            // $this->install_system_package(["postfix-pgsql"]);
             $this->prompt_done();
             return true;
         }
