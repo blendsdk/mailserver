@@ -70,7 +70,7 @@ class MailServerInstaller {
 
     protected function configure_postfix() {
         $postconf = [
-            "myhostname = ${$this->SERVER_FDQN}",
+            "myhostname = {$this->SERVER_FDQN}",
             "broken_sasl_auth_clients = no",
             "disable_vrfy_command = yes",
             "smtpd_banner = \$myhostname ESMTP"
