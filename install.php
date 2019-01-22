@@ -27,6 +27,7 @@ class MailServerInstaller {
 
         if (!empty(getenv("DEBUG"))) {
             $this->USERNAME = "mail_" . date('U');
+            $this->UID =  date('U');
         }
 
         $this->USER_HOME = "/home/" . $this->USERNAME;
