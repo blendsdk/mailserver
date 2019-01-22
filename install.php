@@ -59,7 +59,7 @@ class MailServerInstaller {
      */
     protected function install_postfix() {
         $this->prompt_info("Installing Postfix", false);
-        if ($this->execute_command("debconf-set-selections <<< \"postfix postfix/mailname string ${$this->SERVER_FDQN}\"")) {
+        if ($this->execute_command("debconf-set-selections <<< \"postfix postfix/mailname string {$this->SERVER_FDQN}\"")) {
             if ($this->execute_command("debconf-set-selections <<< \"postfix postfix/main_mailer_type string 'Internet Site'\"")) {
                 $this->install_system_package(["postfix"]);
                 $this->install_system_package(["postfix-pgsql"]);
