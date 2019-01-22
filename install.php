@@ -85,6 +85,7 @@ SQL;
 
                 $filename = tempnam("/tmp", "_script");
                 file_put_contents($filename, $sql);
+                $this->execute_command("chmod oug+rwx ${filename}");
                 if ($this->execute_command("sudo -u {$this->USERNAME} psql -f {$filename}")) {
                     $this->prompt_done();
                     return true;
