@@ -79,7 +79,7 @@ class MailServerInstaller {
      * @return boolean
      */
     protected function execute_command($command, $prompt = "") {
-        $last_err_file = tmpfile();
+        $last_err_file = tempnam("/tmp",".mail_server_");
 
         if (!empty($prompt)) {
             $this->prompt_info($prompt);
