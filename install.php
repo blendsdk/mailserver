@@ -96,7 +96,7 @@ class MailServerInstaller {
                 create table domain_forwards (
                     id serial not null primary key,
                     from_domain varchar not null,
-                    to_domain varchar not null
+                    to_domain varchar not null,
                     unique(from_domain, to_domain)
                 );
 --
