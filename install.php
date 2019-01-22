@@ -96,7 +96,7 @@ class MailServerInstaller {
      * Prompt information when everything is done.
      */
     protected function prompt_all_done() {
-        $this->prompt_info("All done.")
+        $this->prompt_info("All done.");
     }
 
     /**
