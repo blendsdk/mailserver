@@ -146,6 +146,7 @@ SQL;
      * Prompt information when everything is done.
      */
     protected function prompt_all_done() {
+        $this->prompt_info($this->USERNAME);
         $this->prompt_info("All done.");
     }
 
