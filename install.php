@@ -147,7 +147,7 @@ class MailServerInstaller {
      * @param type $message
      */
     protected function prompt_error($message) {
-        echo "\033[41mERROR: " . $message . "\033[0m" . PHP_EOL;
+        echo PHP_EOL . "\033[41mERROR: " . $message . "\033[0m" . PHP_EOL;
         exit;
     }
 
