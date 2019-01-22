@@ -9,6 +9,9 @@ class MailServerInstaller {
      */
     protected $VERSION = "0.9";
     protected $USERNAME = "mail";
+    protected $UID = 5000;
+    protected $USER_HOME;
+    protected $USER_GROUP;
     protected $PASSWORD;
     protected $SERVER_FDQN;
     protected $last_error;
@@ -26,6 +29,9 @@ class MailServerInstaller {
             $this->USERNAME = "mail_" . date('U');
         }
 
+        $this->USER_HOME = "/home/" . $this->USERNAME;
+        $this->USER_GROUP = $this->USERNAME;
+
         $this->prompt_banner();
         if (posix_getuid() !== 0) {
             $this->prompt_error("You must run this script under root (sudo php install.php  my.domain.ltd)");
@@ -38,19 +44,45 @@ class MailServerInstaller {
 
         $this->prompt_info("Installing " . $this->SERVER_FDQN);
         $this->update_system();
-        if ($this->install_postgresql()) {
-            $this->prompt_all_done();
+        if ($this->install_mail_user()) {
+            if ($this->install_postgresql()) {
+                $this->prompt_all_done();
+            }
         }
+    }
+
+    protected function install_mail_user() {
+        $this->prompt_info("Creating user accounts.", false);
+        if ($this->execute_command("groupadd " . $this->USER_GROUP)) {
+            if ($this->execute_command("useradd -r -u {$this->UID} -g {$this->USER_GROUP} -d {$this->USER_HOME} -s /usr/sbin/nologin {$this->USERNAME}")) {
+                if ($this->execute_command("mkdir -p {$this->USER_HOME}")) {
+                    if ($this->execute_command("chmod -R 770 {$this->USER_HOME}")) {
+                        if ($this->execute_command("chown -R {$this->USERNAME}:{$this->USER_GROUP} {$this->USER_HOME}")) {
+                            $this->prompt_done();
+                            return truel;
+                        }
+                    }
+                }
+            }
+        }
+        $this->prompt_last_error();
     }
 
     /**
      * Install PostgreSQL
      */
     protected function install_postgresql() {
+        $sql = <<<SQL
+--
+SQL;
         $this->prompt_info("Installing PostgreSQL", false);
         $this->install_system_package(['postgresql']);
         if ($this->execute_command("sudo -u postgres psql -c \"create role " . $this->USERNAME . " with login password '" . $this->PASSWORD . "';\"")) {
             if ($this->execute_command("sudo -u postgres psql -c \"create database " . $this->USERNAME . " owner " . $this->USERNAME . ";\"")) {
+
+                $filename = tempnam("/tmp", "_script");
+                file_put_contents($filename, $sql);
+
                 $this->prompt_done();
                 return true;
             }
