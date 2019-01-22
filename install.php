@@ -21,7 +21,7 @@ class MailServerInstaller {
         global $argc;
 
         $this->PASSWORD = base_convert(uniqid('pass', true), 10, 36);
-        
+
         if(getenv("DEBUG")) {
             $this->USERNAME = "mail_" . date('U');
         }
@@ -132,14 +132,14 @@ class MailServerInstaller {
      * @param type $eol
      */
     protected function prompt_info($message, $eol = true) {
-        echo PHP_EOL . "\033[93m" . $message . "\033[0m" . ($eol === true ? PHP_EOL : '');
+        echo "\033[93m" . $message . "\033[0m" . ($eol === true ? PHP_EOL : '');
     }
 
     /**
      * Prompts the banner
      */
     protected function prompt_banner() {
-        echo "\033[96mMailServer Installer v" . $this->VERSION . "\033[0m" . PHP_EOL;
+        echo PHP_EOL . "\033[96mMailServer Installer v" . $this->VERSION . "\033[0m" . PHP_EOL;
     }
 
     /**
