@@ -53,12 +53,16 @@ class MailServerInstaller {
         }
     }
 
+    /**
+     * Set postfix install defaults
+     * @return type
+     */
     protected function set_postfix_install_defaults() {
         $script = [
             "debconf-set-selections <<< \"postfix postfix/mailname string {$this->SERVER_FDQN}\"",
             "debconf-set-selections <<< \"postfix postfix/main_mailer_type string 'Internet Site'\""
         ];
-        $filename = tempnam("/tmp");
+        $filename = tempnam("/tmp", "postfix-cfg-");
         file_put_contents($filename, implode("\n", $script));
         return $this->execute_command("bash {$filename}");
     }
@@ -69,13 +73,11 @@ class MailServerInstaller {
      */
     protected function install_postfix() {
         $this->prompt_info("Installing Postfix", false);
-        if ($this->execute_command("debconf-set-selections <<< \"postfix postfix/mailname string {$this->SERVER_FDQN}\"")) {
-            if ($this->execute_command("debconf-set-selections <<< \"postfix postfix/main_mailer_type string 'Internet Site'\"")) {
-                $this->install_system_package(["postfix"]);
-                $this->install_system_package(["postfix-pgsql"]);
-                $this->prompt_done();
-                return true;
-            }
+        if ($this->set_postfix_install_defaults()) {
+            $this->install_system_package(["postfix"]);
+            $this->install_system_package(["postfix-pgsql"]);
+            $this->prompt_done();
+            return true;
         }
         $this->prompt_last_error();
     }
