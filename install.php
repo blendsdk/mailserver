@@ -30,6 +30,19 @@ class MailServerInstaller {
 
         $this->prompt_info("Installing " . $this->SERVER_FDQN);
         $this->update_system();
+        if ($this->install_postgresql()) {
+            $this->prompt_all_done();
+        }
+    }
+
+    /**
+     * Install PostgreSQL
+     */
+    protected function install_postgresql() {
+        $this->prompt_info("Installing PostgreSQL");
+        $this->install_system_package(['postgresql']);
+        $this->prompt_done();
+        return true;
     }
 
     /**
@@ -46,8 +59,7 @@ class MailServerInstaller {
      * Installing a one or more system packages
      * @param array $packages
      */
-    protected function install_system_package(array $packages, $names) {
-        $this->prompt_info("Installing " . $names);
+    protected function install_system_package(array $packages) {
         shell_exec("apt-get install -y " . implode(" ", $packages) . " >> /dev/null 2>&1");
     }
 
@@ -81,10 +93,17 @@ class MailServerInstaller {
     }
 
     /**
+     * Prompt information when everything is done.
+     */
+    protected function prompt_all_done() {
+        $this->prompt_info("All done.")
+    }
+
+    /**
      * Prompt a ",done." message
      */
     protected function prompt_done() {
-        $this->prompt_info(",done.");
+        $this->prompt_info(", done.");
     }
 
     /**
