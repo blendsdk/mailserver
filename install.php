@@ -13,6 +13,7 @@ class MailServerInstaller {
     protected $MAIL_USER_UID = 5000;
     protected $MAIL_USER_PASSWORD = "";
     protected $SERVER_FDQN;
+    protected $SPAM_ASSASSIN_CONFIG = "/etc/default/spamassassin";
     protected $last_error;
 
     /**
@@ -43,9 +44,9 @@ class MailServerInstaller {
         $this->update_system();
         if ($this->install_mail_user()) {
             if ($this->install_postgresql()) {
-//                if ($this->install_spamassassin()) {
-//                    $this->prompt_all_done();
-//                }
+                if ($this->install_spamassassin()) {
+                    $this->prompt_all_done();
+                }
             }
         }
     }
@@ -55,8 +56,15 @@ class MailServerInstaller {
      * @return boolean
      */
     protected function install_spamassassin() {
+        $config = <<<STR
+ENABLED=1
+OPTIONS="--create-prefs --max-children 5 --helper-home-dir --username {$this->MAIL_USER} --syslog /var/log/spamd.log"
+PIDFILE="/var/run/spamd.pid"
+CRON=1
+STR;
         $this->prompt_info("Installing Spamassassin", false);
         $this->install_system_package(['spamassassin']);
+        file_put_contents($this->SPAM_ASSASSIN_CONFIG, $config);
         $this->prompt_done();
         return true;
     }
