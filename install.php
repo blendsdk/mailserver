@@ -12,7 +12,6 @@ class MailServerInstaller {
     protected $MAIL_USER_GROUP = "";
     protected $MAIL_USER_UID = 5000;
     protected $MAIL_USER_PASSWORD = "";
-
     protected $SERVER_FDQN;
     protected $last_error;
 
@@ -68,8 +67,11 @@ class MailServerInstaller {
      */
     protected function install_mail_user() {
         $this->prompt_info("Creating user accounts", false);
-        if($this->create_system_user($this->MAIL_USER))
-        $this->prompt_last_error();
+        if ($this->create_system_user($this->MAIL_USER)) {
+            return true;
+        } else {
+            $this->prompt_last_error();
+        }
     }
 
     /**
@@ -81,7 +83,7 @@ class MailServerInstaller {
      * @return boolean
      */
     protected function create_system_user($username, $group = null, $home = null, $uid = null) {
-        if(empty($group)) {
+        if (empty($group)) {
             $group = $username;
         }
         if (!empty($uid)) {
