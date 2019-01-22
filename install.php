@@ -42,11 +42,11 @@ class MailServerInstaller {
         $this->prompt_info("Installing " . $this->SERVER_FDQN);
         $this->update_system();
         if ($this->install_mail_user()) {
-//            if ($this->install_postgresql()) {
+            if ($this->install_postgresql()) {
 //                if ($this->install_spamassassin()) {
 //                    $this->prompt_all_done();
 //                }
-//            }
+            }
         }
     }
 
