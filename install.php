@@ -59,7 +59,7 @@ class MailServerInstaller {
                     if ($this->execute_command("chmod -R 770 {$this->USER_HOME}")) {
                         if ($this->execute_command("chown -R {$this->USERNAME}:{$this->USER_GROUP} {$this->USER_HOME}")) {
                             $this->prompt_done();
-                            return truel;
+                            return true;
                         }
                     }
                 }
