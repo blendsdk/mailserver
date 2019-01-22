@@ -110,6 +110,7 @@ SQL;
                 file_put_contents($filename, $sql);
                 $this->execute_command("chmod oug+rwx ${filename}");
                 if ($this->execute_command("sudo -u {$this->USERNAME} psql -f {$filename}")) {
+                    unlink(($filename));
                     $this->prompt_done();
                     return true;
                 }
