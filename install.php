@@ -8,10 +8,9 @@ class MailServerInstaller {
      * @var string
      */
     protected $VERSION = "0.9";
-    protected $SERVER_FDQN;
-    protected $USERNAME;
+    protected $USERNAME = "mail";
     protected $PASSWORD;
-
+    protected $SERVER_FDQN;
     protected $last_error;
 
     /**
@@ -20,7 +19,7 @@ class MailServerInstaller {
     public function __construct() {
         global $argv;
         global $argc;
-
+        $this->PASSWORD = base_convert(uniqid('pass', true), 10, 36);
         $this->prompt_banner();
         if (posix_getuid() !== 0) {
             $this->prompt_error("You must run this script under root (sudo php install.php  my.domain.ltd)");
@@ -44,8 +43,8 @@ class MailServerInstaller {
     protected function install_postgresql() {
         $this->prompt_info("Installing PostgreSQL", false);
         $this->install_system_package(['postgresql']);
-        if($this->execute_command("sudo -u postgres psql -c \"create role " . $this->USERNAME . " with login password '" . $this->PASSWORD .  "';\"")) {
-            if($this->execute_command("sudo -u postgres psql -c \"create database " . $this->USERNAME . " owner " . $this->USERNAME . ";\"")) {
+        if ($this->execute_command("sudo -u postgres psql -c \"create role " . $this->USERNAME . " with login password '" . $this->PASSWORD . "';\"")) {
+            if ($this->execute_command("sudo -u postgres psql -c \"create database " . $this->USERNAME . " owner " . $this->USERNAME . ";\"")) {
                 $this->prompt_done();
                 return true;
             }
@@ -79,7 +78,7 @@ class MailServerInstaller {
      * @return boolean
      */
     protected function execute_command($command, $prompt = "") {
-        $last_err_file = tempnam("/tmp",".mail_server_");
+        $last_err_file = tempnam("/tmp", ".mail_server_");
 
         if (!empty($prompt)) {
             $this->prompt_info($prompt);
