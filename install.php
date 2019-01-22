@@ -74,8 +74,31 @@ class MailServerInstaller {
      */
     protected function install_postgresql() {
         $sql = <<<SQL
-                select now();
-                create table hello();
+                create table domains (
+                    id serial not null primary key,
+                    name varchar not null unique,
+                    is_active boolean not null default true
+                );
+
+                create table users (
+                    id serial not null primary key,
+                    username varchar not null unique,
+                    password varchar not null
+                );
+
+                create table forwards (
+                    id serial not null primary key,
+                    from_email varchar not null,
+                    to_email varchar not null,
+                    unique(from_email, to_email)
+                );
+
+                create table domain_forwards (
+                    id serial not null primary key,
+                    from_domain varchar not null,
+                    to_domain varchar not null
+                    unique(from_domain, to_domain)
+                );
 --
 SQL;
         $this->prompt_info("Installing PostgreSQL", false);
