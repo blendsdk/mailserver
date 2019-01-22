@@ -68,6 +68,21 @@ class MailServerInstaller {
         return $this->execute_command("bash {$filename}");
     }
 
+    protected function configure_postfix() {
+        $postconf = [
+            "myhostname = ${$this->SERVER_FDQN}",
+            "broken_sasl_auth_clients = no",
+            "disable_vrfy_command = yes",
+            "smtpd_banner = \$myhostname ESMTP"
+        ];
+        foreach ($postconf as $key => $value) {
+            if (!$this->execute_command("postconf -e \"{$value}\"")) {
+                $this->prompt_last_error();
+            }
+        }
+        return true;
+    }
+
     /**
      * Install and configure postfix
      * @return boolean
@@ -77,8 +92,10 @@ class MailServerInstaller {
         if ($this->set_postfix_install_defaults()) {
             $this->install_system_package(["postfix"]);
             $this->install_system_package(["postfix-pgsql"]);
-            $this->prompt_done();
-            return true;
+            if ($this->configure_postfix()) {
+                $this->prompt_done();
+                return true;
+            }
         }
         $this->prompt_last_error();
     }
