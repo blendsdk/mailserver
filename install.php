@@ -47,11 +47,28 @@ class MailServerInstaller {
         $this->update_system();
         if ($this->install_mail_user()) {
             if ($this->install_postgresql()) {
-                $this->prompt_all_done();
+                if ($this->install_spamassassin()) {
+                    $this->prompt_all_done();
+                }
             }
         }
     }
 
+    /**
+     * Install Spamassassin
+     * @return boolean
+     */
+    protected function install_spamassassin() {
+        $this->prompt_info("Installing Spamassassin", false);
+        $this->install_system_package(['spamassassin']);
+        $this->prompt_done();
+        return true;
+    }
+
+    /**
+     * Install and configure the system user for handling virtual mails
+     * @return boolean
+     */
     protected function install_mail_user() {
         $this->prompt_info("Creating user accounts", false);
         if ($this->execute_command("groupadd " . $this->USER_GROUP)) {
