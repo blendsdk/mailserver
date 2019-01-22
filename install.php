@@ -67,7 +67,7 @@ class MailServerInstaller {
      */
     protected function install_mail_user() {
         $this->prompt_info("Creating user accounts", false);
-        if ($this->create_system_user($this->MAIL_USER)) {
+        if ($this->create_system_user($this->MAIL_USER, $this->MAIL_USER_GROUP, null, $this->MAIL_USER_UID)) {
             return true;
         } else {
             $this->prompt_last_error();
