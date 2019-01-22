@@ -8,11 +8,11 @@ class MailServerInstaller {
      * @var string
      */
     protected $VERSION = "0.9";
-    protected $USERNAME = "mail";
-    protected $UID = 5000;
-    protected $USER_HOME;
-    protected $USER_GROUP;
-    protected $PASSWORD;
+    protected $MAIL_USER = "mail";
+    protected $MAIL_USER_GROUP = "";
+    protected $MAIL_USER_UID = 5000;
+    protected $MAIL_USER_PASSWORD = "";
+
     protected $SERVER_FDQN;
     protected $last_error;
 
@@ -23,15 +23,12 @@ class MailServerInstaller {
         global $argv;
         global $argc;
 
-        $this->PASSWORD = base_convert(uniqid('pass', true), 10, 36);
+        $this->MAIL_USER_PASSWORD = base_convert(uniqid('pass', true), 10, 36);
 
         if (!empty(getenv("DEBUG"))) {
-            $this->USERNAME = "mail_" . date('U');
-            $this->UID = date('U');
+            $this->MAIL_USER = "mail_" . date('U');
+            $this->MAIL_USER_UID = date('U');
         }
-
-        $this->USER_HOME = "/home/" . $this->USERNAME;
-        $this->USER_GROUP = $this->USERNAME;
 
         $this->prompt_banner();
         if (posix_getuid() !== 0) {
@@ -46,10 +43,10 @@ class MailServerInstaller {
         $this->prompt_info("Installing " . $this->SERVER_FDQN);
         $this->update_system();
         if ($this->install_mail_user()) {
-            if ($this->install_postgresql()) {
-                if ($this->install_spamassassin()) {
-                    $this->prompt_all_done();
-                }
+//            if ($this->install_postgresql()) {
+//                if ($this->install_spamassassin()) {
+//                    $this->prompt_all_done();
+//                }
             }
         }
     }
@@ -71,19 +68,40 @@ class MailServerInstaller {
      */
     protected function install_mail_user() {
         $this->prompt_info("Creating user accounts", false);
-        if ($this->execute_command("groupadd " . $this->USER_GROUP)) {
-            if ($this->execute_command("useradd -r -u {$this->UID} -g {$this->USER_GROUP} -d {$this->USER_HOME} -s /usr/sbin/nologin {$this->USERNAME}")) {
-                if ($this->execute_command("mkdir -p {$this->USER_HOME}")) {
-                    if ($this->execute_command("chmod -R 770 {$this->USER_HOME}")) {
-                        if ($this->execute_command("chown -R {$this->USERNAME}:{$this->USER_GROUP} {$this->USER_HOME}")) {
-                            $this->prompt_done();
+        if($this->create_system_user($this->MAIL_USER))
+        $this->prompt_last_error();
+    }
+
+    /**
+     * Creates a system user account
+     * @param type $username
+     * @param type $group
+     * @param type $home
+     * @param type $uid
+     * @return boolean
+     */
+    protected function create_system_user($username, $group = null, $home = null, $uid = null) {
+        if(empty($group)) {
+            $group = $username;
+        }
+        if (!empty($uid)) {
+            $uid = "-u {$uid}";
+        }
+        if (empty($home)) {
+            $home = "/home/{$username}";
+        }
+        if ($this->execute_command("groupadd " . $group)) {
+            if ($this->execute_command("useradd -r ${uid} -g {$group} -d {$home} -s /usr/sbin/nologin {$username}")) {
+                if ($this->execute_command("mkdir -p {$home}")) {
+                    if ($this->execute_command("chmod -R 770 {$home}")) {
+                        if ($this->execute_command("chown -R {$username}:{$group} {$home}")) {
                             return true;
                         }
                     }
                 }
             }
         }
-        $this->prompt_last_error();
+        return false;
     }
 
     /**
@@ -120,13 +138,13 @@ class MailServerInstaller {
 SQL;
         $this->prompt_info("Installing PostgreSQL", false);
         $this->install_system_package(['postgresql']);
-        if ($this->execute_command("sudo -u postgres psql -c \"create role " . $this->USERNAME . " with login password '" . $this->PASSWORD . "';\"")) {
-            if ($this->execute_command("sudo -u postgres psql -c \"create database " . $this->USERNAME . " owner " . $this->USERNAME . ";\"")) {
+        if ($this->execute_command("sudo -u postgres psql -c \"create role " . $this->MAIL_USER . " with login password '" . $this->PASSWORD . "';\"")) {
+            if ($this->execute_command("sudo -u postgres psql -c \"create database " . $this->MAIL_USER . " owner " . $this->MAIL_USER . ";\"")) {
 
                 $filename = tempnam("/tmp", "_script");
                 file_put_contents($filename, $sql);
                 $this->execute_command("chmod oug+rwx ${filename}");
-                if ($this->execute_command("sudo -u {$this->USERNAME} psql -f {$filename}")) {
+                if ($this->execute_command("sudo -u {$this->MAIL_USER} psql -f {$filename}")) {
                     unlink(($filename));
                     $this->prompt_done();
                     return true;
@@ -187,7 +205,7 @@ SQL;
      * Prompt information when everything is done.
      */
     protected function prompt_all_done() {
-        $this->prompt_info($this->USERNAME);
+        $this->prompt_info($this->MAIL_USER);
         $this->prompt_info("All done.");
     }
 
