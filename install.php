@@ -47,7 +47,7 @@ class MailServerInstaller {
 //                if ($this->install_spamassassin()) {
 //                    $this->prompt_all_done();
 //                }
-            }
+//            }
         }
     }
 
