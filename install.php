@@ -27,7 +27,7 @@ class MailServerInstaller {
 
         if (!empty(getenv("DEBUG"))) {
             $this->USERNAME = "mail_" . date('U');
-            $this->UID =  date('U');
+            $this->UID = date('U');
         }
 
         $this->USER_HOME = "/home/" . $this->USERNAME;
@@ -53,7 +53,7 @@ class MailServerInstaller {
     }
 
     protected function install_mail_user() {
-        $this->prompt_info("Creating user accounts.", false);
+        $this->prompt_info("Creating user accounts", false);
         if ($this->execute_command("groupadd " . $this->USER_GROUP)) {
             if ($this->execute_command("useradd -r -u {$this->UID} -g {$this->USER_GROUP} -d {$this->USER_HOME} -s /usr/sbin/nologin {$this->USERNAME}")) {
                 if ($this->execute_command("mkdir -p {$this->USER_HOME}")) {
@@ -74,6 +74,8 @@ class MailServerInstaller {
      */
     protected function install_postgresql() {
         $sql = <<<SQL
+                select now();
+                create table hello();
 --
 SQL;
         $this->prompt_info("Installing PostgreSQL", false);
@@ -83,9 +85,10 @@ SQL;
 
                 $filename = tempnam("/tmp", "_script");
                 file_put_contents($filename, $sql);
-
-                $this->prompt_done();
-                return true;
+                if ($this->execute_command("sudo -u {$this->USERNAME} psql -f {$filename}")) {
+                    $this->prompt_done();
+                    return true;
+                }
             }
         }
         $this->prompt_last_error();
