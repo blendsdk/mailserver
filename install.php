@@ -22,7 +22,7 @@ class MailServerInstaller {
 
         $this->PASSWORD = base_convert(uniqid('pass', true), 10, 36);
 
-        if(getenv("DEBUG")) {
+        if (!empty(getenv("DEBUG"))) {
             $this->USERNAME = "mail_" . date('U');
         }
 
