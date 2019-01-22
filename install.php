@@ -68,6 +68,7 @@ class MailServerInstaller {
     protected function install_mail_user() {
         $this->prompt_info("Creating user accounts", false);
         if ($this->create_system_user($this->MAIL_USER, $this->MAIL_USER_GROUP, null, $this->MAIL_USER_UID)) {
+            $this->prompt_done();
             return true;
         } else {
             $this->prompt_last_error();
@@ -140,7 +141,7 @@ class MailServerInstaller {
 SQL;
         $this->prompt_info("Installing PostgreSQL", false);
         $this->install_system_package(['postgresql']);
-        if ($this->execute_command("sudo -u postgres psql -c \"create role " . $this->MAIL_USER . " with login password '" . $this->PASSWORD . "';\"")) {
+        if ($this->execute_command("sudo -u postgres psql -c \"create role " . $this->MAIL_USER . " with login password '" . $this->MAIL_USER_PASSWORD . "';\"")) {
             if ($this->execute_command("sudo -u postgres psql -c \"create database " . $this->MAIL_USER . " owner " . $this->MAIL_USER . ";\"")) {
 
                 $filename = tempnam("/tmp", "_script");
