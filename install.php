@@ -19,7 +19,13 @@ class MailServerInstaller {
     public function __construct() {
         global $argv;
         global $argc;
+
         $this->PASSWORD = base_convert(uniqid('pass', true), 10, 36);
+        
+        if(getenv("DEBUG")) {
+            $this->USERNAME = "mail_" . date('U');
+        }
+
         $this->prompt_banner();
         if (posix_getuid() !== 0) {
             $this->prompt_error("You must run this script under root (sudo php install.php  my.domain.ltd)");
@@ -126,7 +132,7 @@ class MailServerInstaller {
      * @param type $eol
      */
     protected function prompt_info($message, $eol = true) {
-        echo "\033[93m" . $message . "\033[0m" . ($eol === true ? PHP_EOL : '');
+        echo PHP_EOL . "\033[93m" . $message . "\033[0m" . ($eol === true ? PHP_EOL : '');
     }
 
     /**
