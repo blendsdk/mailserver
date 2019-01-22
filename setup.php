@@ -52,7 +52,6 @@ class MailSetup {
         } else {
             return true;
         }
-
     }
 
     protected function install_postgresql() {
