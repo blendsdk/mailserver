@@ -49,7 +49,7 @@ wget -qO- https://raw.githubusercontent.com/blendsdk/mailserver/master/install.p
 
 ## After installation
 
-TDO
+TODO
 
 ---
 
