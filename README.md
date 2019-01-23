@@ -47,6 +47,12 @@ _Substitute `mail.example.com` with the FDQN of your own mail server_
 wget -qO- https://raw.githubusercontent.com/blendsdk/mailserver/master/install.php | sudo php mail.example.com
 ```
 
+## After installation
+
+TDO
+
+---
+
 ## Change Log
 
 ### Version 0.9
