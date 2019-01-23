@@ -38,9 +38,8 @@ sudo apt-get upgrade -y
 sudo apt-get install php-cli wget -y
 ```
 
-Then we call the installer script and wait for the process to finish.
-Depending on the configuration of your server, the installer process
-could take some time.
+Then we run the `installer` script. Depending on the configuration of your
+server, the installer process could take some time to finish.
 
 _Substitute `mail.example.com` with the FDQN of your own mail server_
 
