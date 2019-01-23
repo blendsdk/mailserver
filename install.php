@@ -68,6 +68,10 @@ class MailServerInstaller {
         return $this->execute_command("bash {$filename}");
     }
 
+    /**
+     * Configure postfix
+     * @return boolean
+     */
     protected function configure_postfix() {
         $postconf = [
             "myhostname = {$this->SERVER_FDQN}",
